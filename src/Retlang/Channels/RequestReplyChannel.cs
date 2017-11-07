@@ -33,5 +33,10 @@ namespace Retlang.Channels
             var request = new ChannelRequest<R, M>(p);
             return _requestChannel.Publish(request) ? request : null;
         }
+
+        public int NumSubscribers
+        {
+            get { return _requestChannel.NumSubscribers; }
+        }
     }
 }
