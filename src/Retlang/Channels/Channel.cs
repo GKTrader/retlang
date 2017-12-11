@@ -24,6 +24,11 @@ namespace Retlang.Channels
             return SubscribeOnProducerThreads(new ChannelSubscription<T>(fiber, receive));
         }
 
+        public IDisposable Subscribe(IFiber fiber, Action<T> receive, string name)
+        {
+            return SubscribeOnProducerThreads(new NamedChannelSubscription<T>(fiber, receive, name));
+        }
+
         /// <summary>
         /// <see cref="ISubscriber{T}.SubscribeToBatch(IFiber,Action{IList{T}},long)"/>
         /// </summary>

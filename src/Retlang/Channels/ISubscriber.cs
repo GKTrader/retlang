@@ -18,6 +18,7 @@ namespace Retlang.Channels
         ///<returns>Unsubscriber object</returns>
         IDisposable Subscribe(IFiber fiber, Action<T> receive);
 
+        IDisposable Subscribe(IFiber fiber, Action<T> receive, string name);
         /// <summary>
         /// Subscribes to actions on the channel in batch form. The events will be batched if the consumer is unable to process the events 
         /// faster than the arrival rate.

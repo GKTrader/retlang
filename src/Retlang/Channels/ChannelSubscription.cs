@@ -10,8 +10,8 @@ namespace Retlang.Channels
     /// <typeparam name="T"></typeparam>
     public class ChannelSubscription<T> : BaseSubscription<T>
     {
-        private readonly Action<T> _receiver;
-        private readonly IFiber _fiber;
+        protected readonly Action<T> _receiver;
+        protected readonly IFiber _fiber;
 
         /// <summary>
         /// Construct the subscription
