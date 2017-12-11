@@ -16,8 +16,8 @@ namespace Retlang.Fibers
         private readonly Scheduler _timer;
         private readonly IExecutor _executor;
 
-        private List<Action> _queue = new List<Action>();
-        private List<Action> _toPass = new List<Action>();
+        private List<INamedAction> _queue = new List<INamedAction>();
+        private List<INamedAction> _toPass = new List<INamedAction>();
 
         private ExecutionState _started = ExecutionState.Created;
         private bool _flushPending;
@@ -54,7 +54,7 @@ namespace Retlang.Fibers
         /// Enqueue a single action.
         /// </summary>
         /// <param name="action"></param>
-        public void Enqueue(Action action)
+        public void Enqueue(INamedAction action)
         {
             if (_started == ExecutionState.Stopped)
             {
@@ -124,7 +124,7 @@ namespace Retlang.Fibers
             }
         }
 
-        private List<Action> ClearActions()
+        private List<INamedAction> ClearActions()
         {
             lock (_lock)
             {
@@ -140,24 +140,24 @@ namespace Retlang.Fibers
         }
 
         /// <summary>
-        /// <see cref="IScheduler.Schedule(Action,long)"/>
+        /// <see cref="IScheduler.Schedule(INamedAction,long)"/>
         /// </summary>
         /// <param name="action"></param>
         /// <param name="firstInMs"></param>
         /// <returns></returns>
-        public IDisposable Schedule(Action action, long firstInMs)
+        public IDisposable Schedule(INamedAction action, long firstInMs)
         {
             return _timer.Schedule(action, firstInMs);
         }
 
         /// <summary>
-        /// <see cref="IScheduler.ScheduleOnInterval(Action,long,long)"/>
+        /// <see cref="IScheduler.ScheduleOnInterval(INamedAction,long,long)"/>
         /// </summary>
         /// <param name="action"></param>
         /// <param name="firstInMs"></param>
         /// <param name="regularInMs"></param>
         /// <returns></returns>
-        public IDisposable ScheduleOnInterval(Action action, long firstInMs, long regularInMs)
+        public IDisposable ScheduleOnInterval(INamedAction action, long firstInMs, long regularInMs)
         {
             return _timer.ScheduleOnInterval(action, firstInMs, regularInMs);
         }
@@ -173,7 +173,7 @@ namespace Retlang.Fibers
             }
             _started = ExecutionState.Running;
             //flush any pending events in queue
-            Enqueue(() => { });
+            Enqueue(NamedAction.From(() => { }));
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace Retlang.Core
         /// Enqueue action to target fiber.
         /// </summary>
         /// <param name="action"></param>
-        void Enqueue(Action action);
+        void Enqueue(INamedAction action);
 
         /// <summary>
         /// Remove timer

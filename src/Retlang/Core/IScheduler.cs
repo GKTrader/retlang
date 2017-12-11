@@ -13,7 +13,7 @@ namespace Retlang.Core
         /// <param name="action"></param>
         /// <param name="firstInMs"></param>
         /// <returns>a handle to cancel the timer.</returns>
-        IDisposable Schedule(Action action, long firstInMs);
+        IDisposable Schedule(INamedAction action, long firstInMs);
 
         /// <summary>
         /// Schedule an action to be executed on a recurring interval.
@@ -22,6 +22,6 @@ namespace Retlang.Core
         /// <param name="firstInMs"></param>
         /// <param name="regularInMs"></param>
         /// <returns>a handle to cancel the timer.</returns>
-        IDisposable ScheduleOnInterval(Action action, long firstInMs, long regularInMs);
+        IDisposable ScheduleOnInterval(INamedAction action, long firstInMs, long regularInMs);
     }
 }

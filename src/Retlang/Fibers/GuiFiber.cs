@@ -16,7 +16,7 @@ namespace Retlang.Fibers
         private readonly IExecutionContext _executionContext;
         private readonly Scheduler _timer;
         private readonly IExecutor _executor;
-        private readonly List<Action> _queue = new List<Action>();
+        private readonly List<INamedAction> _queue = new List<INamedAction>();
 
         private volatile ExecutionState _started = ExecutionState.Created;
 
@@ -34,7 +34,7 @@ namespace Retlang.Fibers
         /// Enqueue a single action.
         /// </summary>
         /// <param name="action"></param>
-        public void Enqueue(Action action)
+        public void Enqueue(INamedAction action)
         {
             if (_started == ExecutionState.Stopped)
             {
@@ -84,17 +84,17 @@ namespace Retlang.Fibers
         }
 
         /// <summary>
-        /// <see cref="IScheduler.Schedule(Action,long)"/>
+        /// <see cref="IScheduler.Schedule(INamedAction,long)"/>
         /// </summary>
-        public IDisposable Schedule(Action action, long firstInMs)
+        public IDisposable Schedule(INamedAction action, long firstInMs)
         {
             return _timer.Schedule(action, firstInMs);
         }
 
         /// <summary>
-        /// <see cref="IScheduler.ScheduleOnInterval(Action,long,long)"/>
+        /// <see cref="IScheduler.ScheduleOnInterval(INamedAction,long,long)"/>
         /// </summary>
-        public IDisposable ScheduleOnInterval(Action action, long firstInMs, long regularInMs)
+        public IDisposable ScheduleOnInterval(INamedAction action, long firstInMs, long regularInMs)
         {
             return _timer.ScheduleOnInterval(action, firstInMs, regularInMs);
         }

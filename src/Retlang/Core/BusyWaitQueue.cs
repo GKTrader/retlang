@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
@@ -17,8 +16,8 @@ namespace Retlang.Core
 
         private bool _running = true;
 
-        private List<Action> _actions = new List<Action>();
-        private List<Action> _toPass = new List<Action>();
+        private List<INamedAction> _actions = new List<INamedAction>();
+        private List<INamedAction> _toPass = new List<INamedAction>();
 
         ///<summary>
         /// BusyWaitQueue with custom executor.
@@ -45,7 +44,7 @@ namespace Retlang.Core
         /// Enqueue action.
         /// </summary>
         /// <param name="action"></param>
-        public void Enqueue(Action action)
+        public void Enqueue(INamedAction action)
         {
             lock (_lock)
             {
@@ -73,8 +72,8 @@ namespace Retlang.Core
                 Monitor.PulseAll(_lock);
             }
         }
-        
-        private List<Action> DequeueAll()
+
+        private List<INamedAction> DequeueAll()
         {
             var spins = 0;
             var stopwatch = Stopwatch.StartNew();
@@ -124,7 +123,7 @@ namespace Retlang.Core
             return false;
         }
 
-        private List<Action> TryDequeue()
+        private List<INamedAction> TryDequeue()
         {
             if (_actions.Count > 0)
             {

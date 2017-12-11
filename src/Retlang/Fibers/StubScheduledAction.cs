@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Retlang.Core;
 
 namespace Retlang.Fibers
 {
@@ -9,7 +10,7 @@ namespace Retlang.Fibers
     ///</summary>
     public class StubScheduledAction : IDisposable
     {
-        private readonly Action _action;
+        private readonly INamedAction _action;
         private readonly long _firstIntervalInMs;
         private readonly long _intervalInMs;
         
@@ -22,7 +23,7 @@ namespace Retlang.Fibers
         ///<param name="firstIntervalInMs"></param>
         ///<param name="intervalInMs"></param>
         ///<param name="registry"></param>
-        public StubScheduledAction(Action action, long firstIntervalInMs, long intervalInMs, List<StubScheduledAction> registry)
+        public StubScheduledAction(INamedAction action, long firstIntervalInMs, long intervalInMs, List<StubScheduledAction> registry)
         {
             _action = action;
             _firstIntervalInMs = firstIntervalInMs;
@@ -36,7 +37,7 @@ namespace Retlang.Fibers
         ///<param name="action"></param>
         ///<param name="timeTilEnqueueInMs"></param>
         ///<param name="registry"></param>
-        public StubScheduledAction(Action action, long timeTilEnqueueInMs, List<StubScheduledAction> registry)
+        public StubScheduledAction(INamedAction action, long timeTilEnqueueInMs, List<StubScheduledAction> registry)
             : this(action, timeTilEnqueueInMs, Timeout.Infinite, registry)
         {
         }
@@ -62,7 +63,7 @@ namespace Retlang.Fibers
         ///</summary>
         public void Execute()
         {
-            _action();
+            _action.Execute();
             if (_intervalInMs == Timeout.Infinite)
             {
                 Dispose();

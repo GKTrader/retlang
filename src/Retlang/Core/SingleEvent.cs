@@ -5,11 +5,11 @@ namespace Retlang.Core
     internal class SingleEvent : IPendingEvent
     {
         private readonly IExecutionContext _executionContext;
-        private readonly Action _toExecute;
+        private readonly INamedAction _toExecute;
         private readonly long _expiration;
         private bool _canceled;
 
-        public SingleEvent(IExecutionContext executionContext, Action toExecute, long scheduledTimeInMs, long now)
+        public SingleEvent(IExecutionContext executionContext, INamedAction toExecute, long scheduledTimeInMs, long now)
         {
             _expiration = now + scheduledTimeInMs;
             _executionContext = executionContext;

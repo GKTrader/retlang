@@ -11,7 +11,7 @@ namespace Retlang.Core
         /// Enqueues action for execution context to process.
         ///</summary>
         ///<param name="action"></param>
-        void Enqueue(Action action);
+        void Enqueue(INamedAction action);
 
         /// <summary>
         /// Start consuming actions.

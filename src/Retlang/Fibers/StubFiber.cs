@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Retlang.Core;
 
 namespace Retlang.Fibers
 {
@@ -15,7 +16,7 @@ namespace Retlang.Fibers
     public class StubFiber : IFiber
     {
         private readonly List<IDisposable> _subscriptions = new List<IDisposable>();
-        private readonly List<Action> _pending = new List<Action>();
+        private readonly List<INamedAction> _pending = new List<INamedAction>();
         private readonly List<StubScheduledAction> _scheduled = new List<StubScheduledAction>();
 
         private bool _root = true;
@@ -40,14 +41,14 @@ namespace Retlang.Fibers
         /// Enqueue a single action.
         /// </summary>
         /// <param name="action"></param>
-        public void Enqueue(Action action)
+        public void Enqueue(INamedAction action)
         {
             if (_root && ExecutePendingImmediately)
             {
                 try
                 {
                     _root = false;
-                    action();
+                    action.Execute();
                     ExecuteAllPendingUntilEmpty();
                 }
                 finally
@@ -94,7 +95,7 @@ namespace Retlang.Fibers
         /// <param name="action"></param>
         /// <param name="firstInMs"></param>
         /// <returns></returns>
-        public IDisposable Schedule(Action action, long firstInMs)
+        public IDisposable Schedule(INamedAction action, long firstInMs)
         {
             var toAdd = new StubScheduledAction(action, firstInMs, _scheduled);
             _scheduled.Add(toAdd);
@@ -108,7 +109,7 @@ namespace Retlang.Fibers
         /// <param name="firstInMs"></param>
         /// <param name="regularInMs"></param>
         /// <returns></returns>
-        public IDisposable ScheduleOnInterval(Action action, long firstInMs, long regularInMs)
+        public IDisposable ScheduleOnInterval(INamedAction action, long firstInMs, long regularInMs)
         {
             var toAdd = new StubScheduledAction(action, firstInMs, regularInMs, _scheduled);
             _scheduled.Add(toAdd);
@@ -126,7 +127,7 @@ namespace Retlang.Fibers
         /// <summary>
         /// All pending actions.
         /// </summary>
-        public List<Action> Pending
+        public List<INamedAction> Pending
         {
             get { return _pending; }
         }
@@ -153,7 +154,7 @@ namespace Retlang.Fibers
             {
                 var toExecute = _pending[0];
                 _pending.RemoveAt(0);
-                toExecute();
+                toExecute.Execute();
             }
         }
 
@@ -166,7 +167,7 @@ namespace Retlang.Fibers
             _pending.Clear();
             foreach (var pending in copy)
             {
-                pending();
+                pending.Execute();
             }
         }
 

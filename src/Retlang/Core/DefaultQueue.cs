@@ -14,8 +14,8 @@ namespace Retlang.Core
 
         private bool _running = true;
 
-        private List<Action> _actions = new List<Action>();
-        private List<Action> _toPass = new List<Action>();
+        private List<INamedAction> _actions = new List<INamedAction>();
+        private List<INamedAction> _toPass = new List<INamedAction>();
 
         ///<summary>
         /// Default queue with custom executor
@@ -38,7 +38,7 @@ namespace Retlang.Core
         /// Enqueue action.
         /// </summary>
         /// <param name="action"></param>
-        public void Enqueue(Action action)
+        public void Enqueue(INamedAction action)
         {
             lock (_lock)
             {
@@ -67,7 +67,7 @@ namespace Retlang.Core
             }
         }
 
-        private List<Action> DequeueAll()
+        private List<INamedAction> DequeueAll()
         {
             lock (_lock)
             {

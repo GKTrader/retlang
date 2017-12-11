@@ -13,9 +13,9 @@ namespace Retlang.Fibers
             _invoker = invoker;
         }
 
-        public void Enqueue(Action action)
+        public void Enqueue(INamedAction action)
         {
-            _invoker.BeginInvoke(action, null);
+            _invoker.BeginInvoke(new Action(action.Execute), null);
         }
     }
 }

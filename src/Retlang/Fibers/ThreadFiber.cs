@@ -80,7 +80,7 @@ namespace Retlang.Fibers
         /// Enqueue a single action.
         /// </summary>
         /// <param name="action"></param>
-        public void Enqueue(Action action)
+        public void Enqueue(INamedAction action)
         {
             _queue.Enqueue(action);
         }
@@ -113,23 +113,23 @@ namespace Retlang.Fibers
         }
 
         /// <summary>
-        /// <see cref="IScheduler.Schedule(Action,long)"/>
+        /// <see cref="IScheduler.Schedule(INamedAction,long)"/>
         /// </summary>
         /// <param name="action"></param>
         /// <param name="firstInMs"></param>
         /// <returns></returns>
-        public IDisposable Schedule(Action action, long firstInMs)
+        public IDisposable Schedule(INamedAction action, long firstInMs)
         {
             return _scheduler.Schedule(action, firstInMs);
         }
 
         /// <summary>
-        /// <see cref="IScheduler.ScheduleOnInterval(Action,long,long)"/>
+        /// <see cref="IScheduler.ScheduleOnInterval(INamedAction,long,long)"/>
         /// </summary>
         /// <param name="action"></param>
         /// <param name="firstInMs"></param>
         /// <param name="regularInMs"></param>
-        public IDisposable ScheduleOnInterval(Action action, long firstInMs, long regularInMs)
+        public IDisposable ScheduleOnInterval(INamedAction action, long firstInMs, long regularInMs)
         {
             return _scheduler.ScheduleOnInterval(action, firstInMs, regularInMs);
         }

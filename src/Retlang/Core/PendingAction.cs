@@ -2,12 +2,18 @@ using System;
 
 namespace Retlang.Core
 {
-    internal class PendingAction : IDisposable
+    public interface INamedAction
     {
-        private readonly Action _action;
+        void Execute();
+        string Name { get; }
+    }
+
+    internal class PendingAction : INamedAction, IDisposable
+    {
+        private readonly INamedAction _action;
         private bool _cancelled;
 
-        public PendingAction(Action action)
+        public PendingAction(INamedAction action)
         {
             _action = action;
         }
@@ -17,11 +23,13 @@ namespace Retlang.Core
             _cancelled = true;
         }
 
+        public string Name { get { return _action.Name; } }
+
         public void Execute()
         {
             if (!_cancelled)
             {
-                _action();
+                _action.Execute();
             }
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Retlang.Core
@@ -12,12 +11,12 @@ namespace Retlang.Core
         /// Executes all actions.
         /// </summary>
         /// <param name="toExecute"></param>
-        void Execute(List<Action> toExecute);
+        void Execute(List<INamedAction> toExecute);
 
         ///<summary>
         /// Executes a single action. 
         ///</summary>
         ///<param name="toExecute"></param>
-        void Execute(Action toExecute);
+        void Execute(INamedAction toExecute);
     }
 }

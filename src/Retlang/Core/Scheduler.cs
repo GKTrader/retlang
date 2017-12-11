@@ -24,12 +24,12 @@ namespace Retlang.Core
         ///<summary>
         /// Enqueues action on to context after timer elapses.  
         ///</summary>
-        public IDisposable Schedule(Action action, long firstInMs)
+        public IDisposable Schedule(INamedAction action, long firstInMs)
         {
             if (firstInMs <= 0)
             {
                 var pending = new PendingAction(action);
-                _executionContext.Enqueue(pending.Execute);
+                _executionContext.Enqueue(pending);
                 return pending;
             }
             else
@@ -43,7 +43,7 @@ namespace Retlang.Core
         ///<summary>
         /// Enqueues actions on to context after schedule elapses.  
         ///</summary>
-        public IDisposable ScheduleOnInterval(Action action, long firstInMs, long regularInMs)
+        public IDisposable ScheduleOnInterval(INamedAction action, long firstInMs, long regularInMs)
         {
             var pending = new TimerAction(action, firstInMs, regularInMs);
             AddPending(pending);
@@ -56,14 +56,14 @@ namespace Retlang.Core
         ///<param name="toRemove"></param>
         public void Remove(IDisposable toRemove)
         {
-            _executionContext.Enqueue(() => _pending.Remove(toRemove));
+            _executionContext.Enqueue(NamedAction.From(() => _pending.Remove(toRemove)));
         }
 
         ///<summary>
         /// Enqueues actions on to context immediately.
         ///</summary>
         ///<param name="action"></param>
-        public void Enqueue(Action action)
+        public void Enqueue(INamedAction action)
         {
             _executionContext.Enqueue(action);
         }
@@ -78,7 +78,7 @@ namespace Retlang.Core
                                              pending.Schedule(this);
                                          }
                                      };
-            _executionContext.Enqueue(addAction);
+            _executionContext.Enqueue(NamedAction.From(addAction));
         }
 
         ///<summary>

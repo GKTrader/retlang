@@ -11,6 +11,6 @@ namespace Retlang.Core
         /// Enqueue a single action.
         /// </summary>
         /// <param name="action"></param>
-        void Enqueue(Action action);
+        void Enqueue(INamedAction action);
     }
 }

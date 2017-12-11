@@ -3,16 +3,16 @@ using System.Threading;
 
 namespace Retlang.Core
 {
-    internal class TimerAction : IDisposable
+    internal class TimerAction : INamedAction, IDisposable
     {
-        private readonly Action _action;
+        private readonly INamedAction _action;
         private readonly long _firstIntervalInMs;
         private readonly long _intervalInMs;
 
         private Timer _timer;
         private bool _cancelled;
 
-        public TimerAction(Action action, long firstIntervalInMs, long intervalInMs)
+        public TimerAction(INamedAction action, long firstIntervalInMs, long intervalInMs)
         {
             _action = action;
             _firstIntervalInMs = firstIntervalInMs;
@@ -38,21 +38,23 @@ namespace Retlang.Core
 
             if (!_cancelled)
             {
-                registry.Enqueue(ExecuteOnFiberThread);
-            }
-        }
-
-        public void ExecuteOnFiberThread()
-        {
-            if (!_cancelled)
-            {
-                _action();
+                registry.Enqueue(this);
             }
         }
 
         public virtual void Dispose()
         {
             _cancelled = true;
+        }
+        
+        public string Name { get { return _action.Name; } }
+
+        public void Execute()
+        {
+            if (!_cancelled)
+            {
+                _action.Execute();
+            }
         }
     }
 }

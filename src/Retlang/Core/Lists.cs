@@ -5,7 +5,7 @@ namespace Retlang.Core
 {
     internal static class Lists
     {
-        public static void Swap(ref List<Action> a, ref List<Action> b)
+        public static void Swap<T>(ref List<T> a, ref List<T> b)
         {
             var tmp = a;
             a = b;
