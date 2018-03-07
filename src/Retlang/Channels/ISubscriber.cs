@@ -4,11 +4,7 @@ using Retlang.Fibers;
 
 namespace Retlang.Channels
 {
-    /// <summary>
-    /// Channel subscription methods.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ISubscriber<T>
+    public interface ISimpleSubscriber<out T>
     {
         ///<summary>
         /// Subscribe to messages on this channel. The provided action will be invoked via a Action on the provided executor.
@@ -17,7 +13,14 @@ namespace Retlang.Channels
         ///<param name="receive"></param>
         ///<returns>Unsubscriber object</returns>
         IDisposable Subscribe(IFiber fiber, Action<T> receive);
+    }
 
+    /// <summary>
+    /// Channel subscription methods.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public interface ISubscriber<T> : ISimpleSubscriber<T>
+    {
         IDisposable Subscribe(IFiber fiber, Action<T> receive, string name);
         /// <summary>
         /// Subscribes to actions on the channel in batch form. The events will be batched if the consumer is unable to process the events 
